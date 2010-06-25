@@ -7,31 +7,18 @@ begin
     gem.name = "rlacaixa"
     gem.summary = %Q{Parser for la Caixa}
     gem.description = %Q{Parser for la Caixa}
-    gem.email = "josep.m.bach@gmail.com"
+    gem.email = "info@codegram.com"
     gem.homepage = "http://github.com/txus/rlacaixa"
-    gem.authors = ["Josep Mª Bach"]
-    gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.authors = ["Oriol Gual", "Josep Mª Bach", "Josep Jaume Rey"]
+
+    gem.add_development_dependency "rspec", ">= 2.0.0.beta.11"
     gem.add_development_dependency "cucumber", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
-end
-
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
-
-task :spec => :check_dependencies
 
 begin
   require 'cucumber/rake/task'
