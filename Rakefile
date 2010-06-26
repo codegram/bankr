@@ -8,10 +8,10 @@ begin
     gem.summary = %Q{Parser for la Caixa}
     gem.description = %Q{Parser for la Caixa}
     gem.email = "info@codegram.com"
-    gem.homepage = "http://github.com/txus/rlacaixa"
+    gem.homepage = "http://github.com/codegram/rlacaixa"
     gem.authors = ["Oriol Gual", "Josep Mª Bach", "Josep Jaume Rey"]
 
-    gem.add_development_dependency "rspec", ">= 2.0.0.beta.11"
+    gem.add_development_dependency "rspec", ">= 2.0.0.beta.12"
     gem.add_development_dependency "cucumber", ">= 0"
   end
   Jeweler::GemcutterTasks.new

@@ -11,11 +11,13 @@ tmtags
 .\#*
 
 ## VIM
-*.swp
+*.sw?
 
 ## PROJECT::GENERAL
 coverage
 rdoc
 pkg
+.bundle
+Gemfile.lock
 
 ## PROJECT::SPECIFIC
