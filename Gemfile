@@ -13,3 +13,5 @@ group :test do
 end
 
 gem 'celerity', :require => nil # JRuby only. Make it available but don't require it in any environment
+gem 'nokogiri'
+gem 'mechanize'

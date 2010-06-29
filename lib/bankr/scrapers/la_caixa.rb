@@ -1,3 +1,6 @@
+require 'nokogiri'
+require 'mechanize'
+
 module Bankr
   module Scrapers
     class LaCaixa
@@ -15,9 +18,38 @@ module Bankr
       end
 
       def log_in
-        @logged_in = true
+        Mechanize.html_parser = Nokogiri::HTML
+        agent = Mechanize.new
+
+        url = 'http://mobil.lacaixa.es/'
+
+        page = agent.get(url)
+        page = agent.click page.link_with(:text => 'Castellano') if page.link_with(:text => 'Castellano')
+        page = agent.click page.link_with(:text => 'Línea Abierta')
+
+        login_form = page.forms[1]
+        login_form.E = @login
+        login_form.B = @password
+        page = agent.submit(login_form)
+
+        if page.link_with(:text => /COMPROBAR PREMIO/)
+          @logged_in = true 
+        else
+          raise Scrapers::CouldNotLogInException
+        end
+
+        # Extra goodness by txoosty
+        #
+        main_account_name = page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('td:first').search('a').text
+
+        main_account_balance = page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('td:nth-of-type(2)').search('font').text
+
       end
 
     end
+
+    class CouldNotLogInException < Exception
+    end
+
   end
 end

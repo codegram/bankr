@@ -12,6 +12,7 @@ begin
     gem.authors = ["Oriol Gual", "Josep Mª Bach", "Josep Jaume Rey"]
 
     gem.add_dependency 'celerity'
+    gem.add_dependency 'nokogiri'
     gem.add_development_dependency "rspec", ">= 2.0.0.beta.14"
   end
   Jeweler::GemcutterTasks.new
