@@ -48,7 +48,7 @@ module Bankr
 
     end
 
-    class CouldNotLogInException < Exception
+    class CouldNotLogInException < StandardError
     end
 
   end
