@@ -32,7 +32,7 @@ module Bankr
         login_form.B = @password
         page = agent.submit(login_form)
 
-        if page.link_with(:text => /COMPROBAR PREMIO/)
+        if page.body =~ /Cuenta principal/
           @logged_in = true 
         else
           raise Scrapers::CouldNotLogInException

@@ -2,18 +2,16 @@ require 'spec_helper'
 
 describe Bankr::Scrapers::LaCaixa do
 
-  subject { Bankr::Scrapers::LaCaixa.new(:login => '65148900', :password => '7023')}
+  subject { Bankr::Scrapers::LaCaixa.new(:login => VALID_DATA["login"], :password => VALID_DATA["password"])}
 
   it { should respond_to(:log_in) }
 
   describe "#log_in" do
 
     it "successfully logs in with valid authentication data" do
-      scraper = Bankr::Scrapers::LaCaixa.new(:login => VALID_DATA["login"],
-                                             :password => VALID_DATA["password"]) 
       expect {
-        scraper.log_in
-      }.to change(scraper, :logged_in?).from(false).to(true)
+        subject.log_in
+      }.to change(subject, :logged_in?).from(false).to(true)
     end
 
     it "fails to log in and raises and exception with invalid authentication data" do
@@ -26,5 +24,7 @@ describe Bankr::Scrapers::LaCaixa do
     end
 
   end
+
+  it { should respond_to(:main_account_balance) }
 
 end
