@@ -6,6 +6,8 @@ describe Bankr::Scrapers::LaCaixa do
 
   it { should respond_to(:log_in) }
 
+  # it { should respond_to(:main_account_balance) }
+
   describe "#log_in" do
 
     it "successfully logs in with valid authentication data" do
@@ -25,6 +27,5 @@ describe Bankr::Scrapers::LaCaixa do
 
   end
 
-  it { should respond_to(:main_account_balance) }
 
 end
