@@ -38,12 +38,16 @@ module Bankr
           raise Scrapers::CouldNotLogInException
         end
 
-        # Extra goodness by txoosty
-        #
+        populate_attributes_from(page)
+
         main_account_name = page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('td:first').search('a').text
 
         main_account_balance = page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('td:nth-of-type(2)').search('font').text
 
+      end
+
+      def main_account_balance
+        @main_account_balance ||= main_account_balance!
       end
 
     end
