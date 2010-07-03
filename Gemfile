@@ -5,7 +5,7 @@ group :development do
 end
 
 group :test do
-  gem "rspec", ">= 2.0.0.beta.14"
+  gem "rspec", ">= 2.0.0.beta.15"
   gem 'autotest'
   gem 'autotest-growl'
 
