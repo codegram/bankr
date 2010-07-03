@@ -6,7 +6,7 @@ describe Bankr::Scrapers::LaCaixa do
 
   it { should respond_to(:log_in) }
 
-  describe "#log_in" do
+  describe "#log_in", :webmock => false do
 
     it "successfully logs in with valid authentication data" do
       pending
@@ -27,17 +27,33 @@ describe Bankr::Scrapers::LaCaixa do
 
   end
 
-  context "public getters with cache" do
+  context "public getters with cache", :webmock => true do
 
-    it { should respond_to(:main_account_balance) }
+    it { should respond_to(:accounts) }
 
-    describe "#main_account_balance" do
+    describe "#accounts" do
 
-      it "fetches the main account balance and caches it" do
-        subject.stub(:main_account_balance!).and_return('1.200', '1.400')
-        subject.main_account_balance.should == '1.200'
-        # Even though main_account_balance! has changed, it should return the cached value
-        subject.main_account_balance.should == '1.200'
+      it "fetches the accounts and caches them" do
+        # The first time returns 3 accounts, the second time only 2
+        subject.stub(:_accounts).and_return([double("account1"),double("account2"),double("account3")],
+                                            [double("account1"),double("account2")])
+        subject.should have(3).accounts
+        subject.should have(3).accounts, "#accounts is not caching the accounts"
+      end
+
+    end
+
+  end
+
+  context "public getters without cache", :webmock => true do
+
+    it { should respond_to(:_accounts) }
+
+    describe "#_accounts" do
+
+      it "fetches the accounts" do
+        stub_request(:get, account_list).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
+        subject.should have(3)._accounts
       end
 
     end

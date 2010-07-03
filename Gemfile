@@ -8,6 +8,7 @@ group :test do
   gem "rspec", ">= 2.0.0.beta.15"
   gem 'autotest'
   gem 'autotest-growl'
+  gem 'webmock'
 
   gem 'remarkable', '=4.0.0.alpha4'
 end
