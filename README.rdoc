@@ -1,9 +1,9 @@
 = bankr
 
-* Features
-** List your bank accounts
-** Get account movements
-** Custom alerts
+== Features
+* List your bank accounts
+* Get account movements
+* Custom alerts
 
 == Note on Patches/Pull Requests
  
@@ -17,4 +17,4 @@
 
 == Copyright
 
-Copyright (c) 2010 Josep Mª Bach. See LICENSE for details.
+Copyright (c) 2010 Josep Mª Bach, Oriol Gual. See LICENSE for details.
