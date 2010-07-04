@@ -23,6 +23,7 @@ describe Bankr::Scrapers::LaCaixa do
         scraper.log_in
       }.to raise_error(Bankr::Scrapers::CouldNotLogInException)
       scraper.logged_in?.should be_false
+      scraper.landing_page.should raise_error(Bankr::Scrapers::NotLoggedInException)
     end
 
   end
@@ -51,9 +52,31 @@ describe Bankr::Scrapers::LaCaixa do
 
     describe "#_accounts" do
 
-      it "fetches the accounts" do
-        stub_request(:get, account_list).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
+      it "fetches the accounts with their name, url and balance" do
+        # Mocking around
+        stub_request(:any, /.*/).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
+
+        agent = Mechanize.new
+        landing_page = agent.get('http://www.bank.com/accounts')
+
+        agent.stub(:click).and_return(landing_page)
+        subject.stub(:landing_page).and_return(landing_page)
+
+        subject.stub(:agent).and_return(agent)
+
+        # Expectations
         subject.should have(3)._accounts
+
+        fetched_accounts = subject._accounts 
+
+        fetched_accounts[0].name.should == 'Main account'
+        fetched_accounts[0].balance.should == '+5.000,00'
+
+        fetched_accounts[1].name.should == 'Personal account'
+        fetched_accounts[1].balance.should == '+500,00'
+
+        fetched_accounts[2].name.should == 'Main account taxes'
+        fetched_accounts[2].balance.should == '+2.500,00'
       end
 
     end
