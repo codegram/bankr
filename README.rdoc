@@ -1,6 +1,9 @@
-= rlacaixa
+= bankr
 
-Description goes here.
+* Features
+** List your bank accounts
+** Get account movements
+** Custom alerts
 
 == Note on Patches/Pull Requests
  
