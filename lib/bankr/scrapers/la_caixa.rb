@@ -1,6 +1,3 @@
-require 'nokogiri'
-require 'mechanize'
-
 module Bankr
   module Scrapers
     class LaCaixa
@@ -70,6 +67,42 @@ module Bankr
           end
         end
         accounts
+      end
+
+      def _movements_for(account, options = {})
+        raise ArgumentError, "Account must be specified" unless account.is_a?(Account)
+        timespan = 2.weeks
+        timespan = options[:last] if options[:last]
+
+        movements = []
+        
+        page = agent.click landing_page.link_with(:text => 'Cuentas')
+
+        page = agent.click page.link_with(:text => account.name)
+
+        begin
+          pagination = page.link_with(:text => '>> Ver más movimientos')
+          div_number = page.search('div:nth-of-type(5)').empty? ? '3' : '4'
+
+          page.search("div:nth-of-type(#{div_number})").search('table:last').search('tr').each_slice(2) do |row|
+            statement = row.first.search('td:first a').text
+            amount = row.first.search('td:last font').text
+
+            date = row.last.search('td div').text.match(/(\d{2})\/(\d{2})\/(\d{4})/)
+            date = Date.parse(date[2] + '/' + date[1] + '/' + date[3]) if date
+
+            return movements if date and date < timespan.send(:ago).to_date
+
+            movements << Movement.new(:account => account,
+                                        :statement => statement,
+                                        :amount => amount,
+                                        :date => date) unless statement.empty? or amount.empty?
+          end
+
+          # Navigate through pagination
+          page = agent.click pagination if pagination
+        end while pagination
+        movements
       end
 
     end

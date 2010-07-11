@@ -1,3 +1,8 @@
+require 'nokogiri'
+require 'mechanize'
+require 'active_support'
+require 'active_support/time'
+
 require 'bankr/scrapers/la_caixa'
 
 module Bankr

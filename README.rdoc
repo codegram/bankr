@@ -1,5 +1,18 @@
 = bankr
 
+== Tests
+
+Just run:
+  
+  rake
+
+Or if you don't trust our mock-stub-fu:
+
+  cd lib
+  ruby test_against_real_website.rb
+  
+Both options will require you to create a valid_data.yml file under spec/. Just follow example_valid_data.yml'
+
 == Features
 * List your bank accounts
 * Get account movements
