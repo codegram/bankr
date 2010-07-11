@@ -100,6 +100,7 @@ describe Bankr::Scrapers::LaCaixa do
       end
 
       context "by default" do
+
         it "fetches the movements for the given account from the last two weeks" do
 
           movements = []
@@ -119,8 +120,11 @@ describe Bankr::Scrapers::LaCaixa do
           movements[3].date.should == Date.parse('06/14/2010')
 
         end
+
       end
+
       context "when specifying :last => 1.week" do
+
         it "fetches the movements only from the last week" do
 
           movements = []
@@ -136,8 +140,11 @@ describe Bankr::Scrapers::LaCaixa do
           movements[0].date.should == Date.parse('06/25/2010')
 
         end
+
       end
+
       context "with pagination" do
+
         it "fetches the corresponding movements navigating through pagination" do
 
           landing_page = subject.agent.get('http://www.bank.com/accounts/1/movements')
@@ -162,6 +169,7 @@ describe Bankr::Scrapers::LaCaixa do
           movements[11].statement.should == 'VODAFONE'
           movements[11].date.should == Date.parse('05/29/2010')
         end
+
       end
 
     end
