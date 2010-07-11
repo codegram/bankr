@@ -9,6 +9,9 @@ require 'rspec'
 require 'rspec/autorun'
 
 require 'webmock/rspec'
+require 'timecop'
+require 'active_support'
+require 'active_support/time'
 
 require 'yaml'
 

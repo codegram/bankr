@@ -9,6 +9,7 @@ group :test do
   gem 'autotest'
   gem 'autotest-growl'
   gem 'webmock'
+  gem 'timecop'
 
   gem 'remarkable', '=4.0.0.alpha4'
 end
@@ -16,3 +17,5 @@ end
 gem 'celerity', :require => nil # JRuby only. Make it available but don't require it in any environment
 gem 'nokogiri'
 gem 'mechanize'
+gem 'activesupport', '>=3.0.0.beta.3'
+gem 'tzinfo'
