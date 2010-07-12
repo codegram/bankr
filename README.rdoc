@@ -1,6 +1,17 @@
 = bankr
 
-== Tests
+Gather your bank account data through a nice ruby-esque API. Currently in early -and I mean EARLY- alpha stage.
+
+Currently ONLY supporting a very small scraper for La Caixa.
+
+I recommend you not to use it yet, just wait a bit until it is a bit readier!
+
+== Contributing
+
+You can contribute by creating or enhancing a Scraper for your favorite bank, but just not yet! Bankr API is yet somewhat uncertain and it needs to grow up and mature.
+By now we are proud if you just follow the project on Github and check out our updates!
+
+== Running the specs
 
 Just run:
   
@@ -11,9 +22,9 @@ Or if you don't trust our mock-stub-fu:
   cd lib
   ruby test_against_real_website.rb
   
-Both options will require you to create a valid_data.yml file under spec/. Just follow example_valid_data.yml'
+Both options will require you to create a valid_data.yml file under spec/support/. Just follow the example_valid_data.yml there.
 
-== Features
+== Features (rather a wishlist)
 * List your bank accounts
 * Get account movements
 * Custom alerts
@@ -30,4 +41,4 @@ Both options will require you to create a valid_data.yml file under spec/. Just 
 
 == Copyright
 
-Copyright (c) 2010 Josep Mª Bach, Oriol Gual. See LICENSE for details.
+Copyright (c) 2010 Codegram. See LICENSE for details.
