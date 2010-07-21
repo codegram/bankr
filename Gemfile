@@ -17,5 +17,6 @@ end
 gem 'celerity', :require => nil # JRuby only. Make it available but don't require it in any environment
 gem 'nokogiri'
 gem 'mechanize'
-gem 'activesupport', '>=3.0.0.beta.3'
+gem 'activemodel', '>=3.0.0.beta.4'
+gem 'activesupport', '>=3.0.0.beta.4'
 gem 'tzinfo'
