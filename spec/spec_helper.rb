@@ -1,12 +1,5 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-
-require 'rubygems'
-
-require 'lib/bankr'
-
+require 'bankr'
 require 'rspec'
-require 'rspec/autorun'
 
 require 'webmock/rspec'
 require 'timecop'
@@ -35,4 +28,4 @@ end
 
 RSpec.configuration.include(LaCaixaPaths)
 RSpec.configuration.include(HelperMethods)
-RSpec.configuration.include(WebMock, :webmock => true)
+RSpec.configuration.include(WebMock::API, :webmock => true)

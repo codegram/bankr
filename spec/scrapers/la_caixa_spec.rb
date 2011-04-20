@@ -9,21 +9,25 @@ describe Bankr::Scrapers::LaCaixa do
   describe "#log_in", :webmock => false do
 
     it "successfully logs in with valid authentication data" do
-      pending "Won't pass until Webmock.allow_net_connect! works properly"
+      WebMock.allow_net_connect!
       expect {
         subject.log_in
       }.to change(subject, :logged_in?).from(false).to(true)
+      WebMock.disable_net_connect!
     end
 
     it "fails to log in and raises and exception with invalid authentication data" do
-      pending "Won't pass until Webmock.allow_net_connect! works properly"
+      WebMock.allow_net_connect!
       scraper = Bankr::Scrapers::LaCaixa.new(:login => '33358924',
                                              :password => '3333') 
       expect {
         scraper.log_in
       }.to raise_error(Bankr::Scrapers::CouldNotLogInException)
       scraper.logged_in?.should be_false
-      scraper.landing_page.should raise_error(Bankr::Scrapers::NotLoggedInException)
+      expect {
+        scraper.landing_page
+      }.to raise_error(Bankr::Scrapers::NotLoggedInException)
+      WebMock.disable_net_connect!
     end
 
   end

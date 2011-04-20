@@ -1,12 +1,8 @@
-require 'rubygems'
-require 'nokogiri'
-require 'mechanize'
+require 'bundler'
+Bundler.setup
+require 'bankr'
 
-require 'bankr/bankr'
-require 'bankr/account'
-require 'bankr/movement'
-
-VALID_DATA = YAML.load( File.open('../spec/support/valid_data.yml') )
+VALID_DATA = YAML.load( File.open('spec/support/valid_data.yml') )
 
 a = Bankr::Scrapers::LaCaixa.new(:login => VALID_DATA["login"], :password => VALID_DATA["password"])
 
