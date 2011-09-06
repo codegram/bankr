@@ -32,16 +32,29 @@ module Bankr
       def log_in
 
         page = agent.get(@url)
-        page = agent.click page.link_with(:text => 'Castellano') if page.link_with(:text => 'Castellano')
+
+        if page.link_with(text: 'Canviar idioma')
+          page = agent.click page.link_with(:text => 'Canviar idioma')
+          page = agent.click page.link_with(:text => 'Castellano')
+
+        elsif page.link_with(text: 'Change language')
+          page = agent.click page.link_with(:text => 'Change language')
+          page = agent.click page.link_with(:text => 'Castellano')
+
+        elsif page.link_with(text: 'Castellano')
+          page = agent.click page.link_with(:text => 'Castellano')
+        end
+
         page = agent.click page.link_with(:text => 'Línea Abierta')
 
         login_form = page.forms[1]
+
         login_form.E = @login
         login_form.B = @password
         page = agent.submit(login_form)
 
         if page.body =~ /Cuenta principal/
-          @logged_in = true 
+          @logged_in = true
           @landing_page = page
         else
           raise Scrapers::CouldNotLogInException
@@ -76,7 +89,7 @@ module Bankr
         timespan = options[:last] if options[:last]
 
         movements = []
-        
+
         page = agent.click landing_page.link_with(:text => 'Cuentas')
 
         page = agent.click page.link_with(:text => account.name)
@@ -85,12 +98,12 @@ module Bankr
           pagination = page.link_with(:text => '>> Ver más movimientos')
           div_number = page.search('div:nth-of-type(5)').empty? ? '3' : '4'
 
-          page.search("div:nth-of-type(#{div_number})").search('table:last').search('tr').each_slice(2) do |row|
-            statement = row.first.search('td:first a').text
-            amount = row.first.search('td:last font').text
+          page.search("form div:nth-of-type(3)").search('table:last').search('tr').each_slice(2) do |row|
+            statement = row.first.search('td:first').text
+            amount = row.first.search('td:last').text
 
             date = row.last.search('td div').text.match(/(\d{2})\/(\d{2})\/(\d{4})/)
-            date = Date.parse(date[2] + '/' + date[1] + '/' + date[3]) if date
+            date = Date.parse(date[1] + '/' + date[2] + '/' + date[3]) if date
 
             return movements if date and date < timespan.send(:ago).to_date
 

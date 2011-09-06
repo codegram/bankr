@@ -21,6 +21,7 @@ puts "...ok" unless first_account.nil?
 
 puts "Fetching movements for the last 6 days..."
 movements = a._movements_for(first_account, :last => 6.days)
+puts movements.inspect
 puts "...ok. Fetched #{movements.size} movements." unless movements.empty? or movements.nil?
 
 puts "Just for the record, your last movement looks like this:"
