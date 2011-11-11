@@ -19,10 +19,13 @@ puts "Fetching first account..."
 first_account = accounts[0]
 puts "...ok" unless first_account.nil?
 
-puts "Fetching movements for the last 6 days..."
-movements = a._movements_for(first_account, :last => 6.days)
+puts "Fetching movements for the current month..."
+movements = a._movements_for(first_account)
 puts movements.inspect
 puts "...ok. Fetched #{movements.size} movements." unless movements.empty? or movements.nil?
 
 puts "Just for the record, your last movement looks like this:"
 pp movements.last
+
+puts "All movements statements:"
+pp movements.map(&:statement)
