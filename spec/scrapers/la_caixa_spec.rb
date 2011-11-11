@@ -19,7 +19,7 @@ describe Bankr::Scrapers::LaCaixa do
     it "fails to log in and raises and exception with invalid authentication data" do
       WebMock.allow_net_connect!
       scraper = Bankr::Scrapers::LaCaixa.new(:login => '33358924',
-                                             :password => '3333') 
+                                             :password => '3333')
       expect {
         scraper.log_in
       }.to raise_error(Bankr::Scrapers::CouldNotLogInException)
@@ -50,13 +50,13 @@ describe Bankr::Scrapers::LaCaixa do
 
   end
 
-  context "public getters without cache", :webmock => true do
+  context "public getters without cache", webmock: true do
 
     it { should respond_to(:_accounts) }
 
     describe "#_accounts" do
 
-      it "fetches the accounts with their name, url and balance" do
+      before do
         # Mocking around
         stub_request(:any, /.*/).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
 
@@ -67,117 +67,62 @@ describe Bankr::Scrapers::LaCaixa do
         subject.stub(:landing_page).and_return(landing_page)
 
         subject.stub(:agent).and_return(agent)
-
-        # Expectations
-        subject.should have(3)._accounts
-
-        fetched_accounts = subject._accounts 
-
-        fetched_accounts[0].name.should == 'Main account'
-        fetched_accounts[0].balance.should == '+5.000,00'
-
-        fetched_accounts[1].name.should == 'Personal account'
-        fetched_accounts[1].balance.should == '+500,00'
-
-        fetched_accounts[2].name.should == 'Main account taxes'
-        fetched_accounts[2].balance.should == '+2.500,00'
       end
 
+      it "fetches the accounts all the accounts" do
+        # Expectations
+        subject.should have(2)._accounts
+      end
+
+      it "fetches the name and balance for each account" do
+        fetched_accounts = subject._accounts
+
+        fetched_accounts[0].name.should == 'Cuenta principal'
+        fetched_accounts[0].balance.should == '+2.140,78'
+
+        fetched_accounts[1].name.should == 'Cuenta secundaria'
+        fetched_accounts[1].balance.should == '+0,00'
+      end
     end
 
     describe "#_movements_for" do
 
       before(:each) do
           # Mocking around
+          stub_request(:any, /accounts\/1$/).to_return(:body => fixture(:la_caixa, :account_show), :headers => { 'Content-Type' => 'text/html' })
           stub_request(:any, /movements$/).to_return(:body => fixture(:la_caixa, :account_movements), :headers => { 'Content-Type' => 'text/html' })
           stub_request(:any, /movements\/2$/).to_return(:body => fixture(:la_caixa, :account_movements_paginated), :headers => { 'Content-Type' => 'text/html' })
 
-          agent = Mechanize.new
-          landing_page = agent.get('http://www.bank.com/accounts/1/movements')
+          account_show = subject.agent.get('http://www.bank.com/accounts/1')
+          movement_list = subject.agent.get('http://www.bank.com/accounts/1/movements')
+          movement_list2 = subject.agent.get('http://www.bank.com/accounts/1/movements/2')
 
-          agent.stub(:click).and_return(landing_page)
-          subject.stub(:landing_page).and_return(landing_page)
+          subject.agent.should_receive(:click).exactly(3).times.and_return(account_show, account_show, movement_list2)
+          subject.agent.should_receive(:submit).exactly(1).times.and_return(movement_list)
+          subject.stub(:landing_page).and_return(account_show)
 
-          subject.stub(:agent).and_return(agent)
-
-          @account = mock('account', :is_a? => true, :name => 'Main account')
+          @account = mock('account', :is_a? => true, :name => 'Cuenta recibos')
       end
 
       context "by default" do
-
-        it "fetches the movements for the given account from the last two weeks" do
-
+        it "fetches the movements for the given account from the current month" do
           movements = []
 
-          Timecop.travel(Date.parse('06/27/2010')) do
+          Timecop.travel(Date.civil(2011,11,11)) do
             movements = subject._movements_for(@account)
           end
 
-          movements.size.should == 4
+          movements.size.should == 16
 
-          movements[0].amount.should == '-13,50'
-          movements[0].statement.should == 'AMC PARC VALLES'
-          movements[0].date.should == Date.parse('06/25/2010')
+          movements[0].amount.should == '-10,86'
+          movements[0].statement.should == '8 ESTATE'
+          movements[0].date.should == Date.civil(2011,11,11)
 
-          movements[3].amount.should == '+60,00'
-          movements[3].statement.should == 'TRASPASO L.ABIERTA'
-          movements[3].date.should == Date.parse('06/14/2010')
-
+          movements[15].amount.should == '+8000,00'
+          movements[15].statement.should == 'NOMINA'
+          movements[15].date.should == Date.civil(2011,11,1)
         end
-
       end
-
-      context "when specifying :last => 1.week" do
-
-        it "fetches the movements only from the last week" do
-
-          movements = []
-
-          Timecop.travel(Date.parse('06/27/2010')) do
-            movements = subject._movements_for(@account, :last => 1.week)
-          end
-
-          movements.size.should == 1
-
-          movements[0].amount.should == '-13,50'
-          movements[0].statement.should == 'AMC PARC VALLES'
-          movements[0].date.should == Date.parse('06/25/2010')
-
-        end
-
-      end
-
-      context "with pagination" do
-
-        it "fetches the corresponding movements navigating through pagination" do
-
-          landing_page = subject.agent.get('http://www.bank.com/accounts/1/movements')
-          second_page = subject.agent.get('http://www.bank.com/accounts/1/movements/2')
-
-          subject.agent.should_receive(:click).exactly(3).times.and_return(landing_page, landing_page, second_page)
-          subject.stub(:landing_page).and_return(landing_page)
-
-          movements = []
-
-          Timecop.travel(Date.parse('06/27/2010')) do
-            movements = subject._movements_for(@account, :last => 1.month)
-          end
-
-          movements.size.should == 12
-
-          movements[0].amount.should == '-13,50'
-          movements[0].statement.should == 'AMC PARC VALLES'
-          movements[0].date.should == Date.parse('06/25/2010')
-
-          movements[11].amount.should == '-25,00'
-          movements[11].statement.should == 'VODAFONE'
-          movements[11].date.should == Date.parse('05/29/2010')
-        end
-
-      end
-
     end
-
   end
-
 end
