@@ -1,1 +1,1 @@
-rvm --create use ruby-1.9.2@bankr
+rvm --create use ruby-1.9.3@bankr
