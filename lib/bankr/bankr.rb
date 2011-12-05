@@ -4,9 +4,10 @@ require 'active_support'
 require 'active_support/time'
 
 require 'bankr/scrapers/la_caixa'
+require 'bankr/outputs/csv'
 
 module Bankr
-  
+
   class Bankr
 
     def initialize(options)
