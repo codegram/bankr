@@ -76,11 +76,16 @@ module Bankr
         page = agent.click landing_page.link_with(:text => 'Todos')
         page = agent.click page.link_with(:text => 'Cuentas a la vista')
 
+
         page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('tr').each do |node|
           if node.search('td').length == 2 && !node.search('td:first a').text.empty?
-            accounts << Account.new(:name => node.search('td:first a').text,
-                                    :url => node.search('td:first a').attribute('href').value,
-                                    :balance => node.search('td:last font').text)
+            name = node.search('td:first a').text
+            account_page = agent.click page.link_with(:text => name)
+            number = account_page.search("form:nth-of-type(1) div.negritagris").text.gsub(/\D/,'')
+
+            accounts << Account.new(:name => name,
+                                    :number => number,
+                                    :balance => normalize_amount(node.search('td:last font').text))
           end
         end
         accounts
