@@ -20,7 +20,7 @@ first_account = accounts[0]
 puts "...ok" unless first_account.nil?
 
 puts "Fetching movements for the current month..."
-movements = a._movements_for(first_account, 3.months.ago)
+movements = a._movements_for(first_account)
 puts movements.inspect
 puts "...ok. Fetched #{movements.size} movements." unless movements.empty? or movements.nil?
 
@@ -29,3 +29,8 @@ pp movements.last
 
 puts "All movements statements:"
 pp movements.map(&:statement)
+
+csv = Bankr::Outputs::CSV.new(movements)
+p "Exporting movements to #{csv.filename}..."
+csv.write
+system("cat #{csv.filename}")
