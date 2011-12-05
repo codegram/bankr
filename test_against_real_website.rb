@@ -20,7 +20,7 @@ first_account = accounts[0]
 puts "...ok" unless first_account.nil?
 
 puts "Fetching movements for the current month..."
-movements = a._movements_for(first_account)
+movements = a._movements_for(first_account, 3.months.ago)
 puts movements.inspect
 puts "...ok. Fetched #{movements.size} movements." unless movements.empty? or movements.nil?
 
