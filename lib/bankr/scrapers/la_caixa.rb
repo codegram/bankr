@@ -11,7 +11,7 @@ module Bankr
         Mechanize.html_parser = Nokogiri::HTML
         @agent = Mechanize.new
 
-        @url = 'http://mobil.lacaixa.es/'
+        @url = "http://m.lacaixa.es/apl/index_es.html"
 
         @logged_in = false
 
@@ -31,7 +31,6 @@ module Bankr
       end
 
       def log_in
-
         page = agent.get(@url)
 
         if page.link_with(text: 'Canviar idioma')
