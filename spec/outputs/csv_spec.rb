@@ -9,19 +9,22 @@ module Bankr
         Timecop.freeze(Date.civil(2011,11,11)) do
           movs = [
             Movement.new(
-              :date    => Time.now.to_date,
-              :account => account,
-              :amount  => -20.51
+              :date       => Time.now.to_date,
+              :account    => account,
+              :amount     => -20.51,
+              :statement  => "Foo"
             ),
             Movement.new(
               :date    => 3.months.ago,
               :account => account,
-              :amount  => 8043.24
+              :amount  => 8043.24,
+              :statement  => "Bar"
             ),
             Movement.new(
               :date    => 10.months.ago,
               :account => account,
-              :amount  => -493.00
+              :amount  => -493.00,
+              :statement  => "Baz"
             )
           ]
         end
@@ -37,6 +40,25 @@ module Bankr
       describe '#filename' do
         it 'returns a filename with relevant data' do
           subject.filename.should eq("1234_2011-01_2011-11.csv")
+        end
+      end
+
+      describe '#write' do
+        before do
+          @stream = []
+          ::CSV.stub(:open).and_yield @stream
+        end
+
+        it 'writes all the movements' do
+          subject.write
+          @stream.length.should eq(3)
+        end
+
+        it 'writes them in a date,amount,statement format' do
+          subject.write
+          @stream.first.should eq(
+            ["2011-11-11", -20.51, "Foo"]
+          )
         end
       end
     end

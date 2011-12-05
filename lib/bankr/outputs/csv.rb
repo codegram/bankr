@@ -8,11 +8,10 @@ module Bankr
       end
 
       def write
-        p "Exporting #{filename}"
-        CSV.open(filename, "wb") do |csv|
-          movements.each do |movement|
+        ::CSV.open(filename, "wb") do |csv|
+          @movements.each do |movement|
             csv << [
-              movement.date,
+              movement.date.strftime("%Y-%m-%d"),
               movement.amount,
               movement.statement
             ]
