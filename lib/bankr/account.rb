@@ -1,26 +1,11 @@
 module Bankr
-
   class Account
-
-    include ::ActiveModel::Validations
-    include ::ActiveModel::Serialization
-
-    validates_presence_of :name, :balance
-
-    attr_accessor :name, :url, :balance
+    attr_accessor :name, :number, :balance
 
     def initialize(options)
-      @attributes = options
-
-      @name = options[:name]
-      @url = options[:url]
+      @name    = options[:name]
       @balance = options[:balance]
+      @number  = options[:number]
     end
-
-    def read_attribute_for_validation(key)
-      @attributes[key]
-    end
-
-  end 
-
+  end
 end
