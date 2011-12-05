@@ -91,10 +91,11 @@ module Bankr
         accounts
       end
 
-      def _movements_for(account)
+      def _movements_for(account, date = Time.now.to_date)
         raise ArgumentError, "Account must be specified" unless account.is_a?(Account)
+        raise ArgumentError, "Date cannot be over 12 months ago" unless (date + 12.months) >= Time.now.to_date
 
-        month_to_fetch = Time.now.month
+        month_to_fetch = ((Time.now.to_date.to_time - date.to_time) / 60 / 60 / 24 / 30).to_i
         movements = []
 
         page = agent.click landing_page.link_with(:text => 'Todos')
@@ -106,7 +107,7 @@ module Bankr
         end
 
         # Navigate to the fetching month
-        page.form.field_with(name: 'BUSCAR_MESES').options[0].select
+        page.form.field_with(name: 'BUSCAR_MESES').options[month_to_fetch].select
         page = agent.submit(page.form)
 
         begin
@@ -133,9 +134,9 @@ module Bankr
           date = Date.parse(date[1] + '/' + date[2] + '/' + date[3]) if date
 
           movements << Movement.new(:account => account,
-                                      :statement => statement,
-                                      :amount => normalize_amount(amount),
-                                      :date => date) unless statement.empty? or amount.empty?
+                                    :statement => statement,
+                                    :amount => normalize_amount(amount),
+                                    :date => date) unless statement.empty? or amount.empty?
         end
         movements
       end
