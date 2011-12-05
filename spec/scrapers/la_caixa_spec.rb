@@ -78,10 +78,10 @@ describe Bankr::Scrapers::LaCaixa do
         fetched_accounts = subject._accounts
 
         fetched_accounts[0].name.should == 'Cuenta principal'
-        fetched_accounts[0].balance.should == '+2.140,78'
+        fetched_accounts[0].balance.should == 2140.78
 
         fetched_accounts[1].name.should == 'Cuenta secundaria'
-        fetched_accounts[1].balance.should == '+0,00'
+        fetched_accounts[1].balance.should == 0.00
       end
     end
 
@@ -114,11 +114,11 @@ describe Bankr::Scrapers::LaCaixa do
 
           movements.size.should == 16
 
-          movements[0].amount.should == '-10,86'
+          movements[0].amount.should == -10.86
           movements[0].statement.should == '8 ESTATE'
           movements[0].date.should == Date.civil(2011,11,11)
 
-          movements[15].amount.should == '+8000,00'
+          movements[15].amount.should == 8000.00
           movements[15].statement.should == 'NOMINA'
           movements[15].date.should == Date.civil(2011,11,1)
         end

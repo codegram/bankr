@@ -134,10 +134,17 @@ module Bankr
 
           movements << Movement.new(:account => account,
                                       :statement => statement,
-                                      :amount => amount,
+                                      :amount => normalize_amount(amount),
                                       :date => date) unless statement.empty? or amount.empty?
         end
         movements
+      end
+
+      def normalize_amount(amount)
+        amount.
+          gsub('.','').
+          gsub(',','.').
+          to_f
       end
 
     end
