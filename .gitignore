@@ -24,3 +24,5 @@ Gemfile.lock
 #
 spec/support/valid_data.yml
 *.csv
+codegram.rb
+codegram_*.rb
