@@ -11,7 +11,7 @@ module Bankr
         ::CSV.open(filename, "wb") do |csv|
           @movements.each do |movement|
             csv << [
-              movement.date.strftime("%Y-%m-%d"),
+              movement.date.strftime("%d/%m/%Y"),
               movement.amount,
               movement.statement
             ]
