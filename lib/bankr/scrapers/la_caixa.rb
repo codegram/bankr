@@ -73,9 +73,7 @@ module Bankr
       def _accounts
         accounts = []
 
-        page = agent.click landing_page.link_with(:text => 'Todos')
-        page = agent.click page.link_with(:text => 'Cuentas a la vista')
-
+        page = navigate_to_accounts_index
 
         page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('tr').each do |node|
           if node.search('td').length == 2 && !node.search('td:first a').text.empty?
@@ -91,6 +89,15 @@ module Bankr
         accounts
       end
 
+      def navigate_to_accounts_index
+        page = if landing_page.link_with(text: 'Tesorería')
+          agent.click landing_page.link_with(:text => 'Tesorería')
+        else
+          page = agent.click landing_page.link_with(:text => 'Todos')
+          agent.click page.link_with(:text => 'Cuentas a la vista')
+        end
+      end
+
       def _movements_for(account, date = Time.now.to_date)
         raise ArgumentError, "Account must be specified" unless account.is_a?(Account)
         raise ArgumentError, "Date cannot be over 12 months ago" unless (date + 12.months) >= Time.now.to_date
@@ -98,8 +105,7 @@ module Bankr
         month_to_fetch = ((Time.now.to_date.to_time - date.to_time) / 60 / 60 / 24 / 30).to_i
         movements = []
 
-        page = agent.click landing_page.link_with(:text => 'Todos')
-        page = agent.click page.link_with(:text => 'Cuentas a la vista')
+        page = navigate_to_accounts_index
 
         # If we aren't in the account show, click the account name
         unless page.content.include?('Buscar por meses')
