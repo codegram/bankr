@@ -82,7 +82,7 @@ module Bankr
 
             accounts << Account.new(:name => name,
                                     :number => number,
-                                    :balance => normalize_amount(node.search('td:last font').text))
+                                    :balance => normalize_amount(node.search('td:last').text))
           end
         end
         accounts
