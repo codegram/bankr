@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'pry'
 module Bankr
   module Scrapers
     class LaCaixa
