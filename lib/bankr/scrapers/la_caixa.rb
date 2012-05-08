@@ -75,7 +75,7 @@ module Bankr
         page = navigate_to_accounts_index
 
         if page.search("Saldo y movimientos").any?
-          name = page.search("table").search("tr:nth-of-type(2)").search("td").text.delete(" ").delete("-")[0,20]
+          name = page.search("table").search("tr:nth-of-type(2)").search("td").text[0,20]
           balance = normalize_amount(page.search("form").search("div:nth-of-type(2)").search("table:nth-of-type(2)").search("td:nth-of-type(2)").text)
           accounts << Account.new(name => name, :number => name, :balance => balance)
         else
