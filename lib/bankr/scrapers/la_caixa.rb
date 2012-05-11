@@ -74,15 +74,21 @@ module Bankr
 
         page = navigate_to_accounts_index
 
-        page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('tr').each do |node|
-          if node.search('td').length == 2 && !node.search('td:first a').text.empty?
-            name = node.search('td:first a').text
-            account_page = agent.click page.link_with(:text => name)
-            number = account_page.search("form:nth-of-type(1) div.negritagris").text.gsub(/\D/,'')
+        if page.search("Saldo y movimientos").any?
+          name = page.search("table").search("tr:nth-of-type(2)").search("td").text.delete(" ").delete("-")[0,20]
+          balance = normalize_amount(page.search("form").search("div:nth-of-type(2)").search("table:nth-of-type(2)").search("td:nth-of-type(2)").text)
+          accounts << Account.new(name => name, :number => name, :balance => balance)
+        else
+          page.search('div:nth-of-type(2)').search('table:nth-of-type(2)').search('tr').each do |node|
+            if node.search('td').length == 2 && !node.search('td:first a').text.empty?
+              name = node.search('td:first a').text
+              account_page = agent.click page.link_with(:text => name)
+              number = account_page.search("form:nth-of-type(1) div.negritagris").text.gsub(/\D/,'')
 
-            accounts << Account.new(:name => name,
-                                    :number => number,
-                                    :balance => normalize_amount(node.search('td:last').text))
+              accounts << Account.new(:name => name,
+                                      :number => number,
+                                      :balance => normalize_amount(node.search('td:last').text))
+            end
           end
         end
         accounts
