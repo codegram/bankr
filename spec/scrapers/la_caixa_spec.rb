@@ -29,7 +29,6 @@ describe Bankr::Scrapers::LaCaixa do
       }.to raise_error(Bankr::Scrapers::NotLoggedInException)
       WebMock.disable_net_connect!
     end
-
   end
 
   context "public getters with cache", :webmock => true do
@@ -55,33 +54,58 @@ describe Bankr::Scrapers::LaCaixa do
     it { should respond_to(:_accounts) }
 
     describe "#_accounts" do
+      context "with only one account" do
+        before do
+          stub_request(:any, /.*/).to_return(:body => fixture(:la_caixa, :account_show), :headers => { 'Content-Type' => 'text/html' })
+          
+          agent = Mechanize.new
+          landing_page = agent.get("http://www.bank.com/accounts/1/movements")
 
-      before do
-        # Mocking around
-        stub_request(:any, /.*/).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
+          agent.stub(:click).and_return(landing_page)
+          subject.stub(:landing_page).and_return(landing_page)
 
-        agent = Mechanize.new
-        landing_page = agent.get('http://www.bank.com/accounts')
+          subject.stub(:agent).and_return(agent)
+        end
 
-        agent.stub(:click).and_return(landing_page)
-        subject.stub(:landing_page).and_return(landing_page)
+        it "counts correctly the accounts number" do
+          subject.should have(1)._accounts 
+        end
 
-        subject.stub(:agent).and_return(agent)
+        it "returns correctly the balance" do
+          fetched_accounts = subject._accounts
+
+          fetched_accounts[0].balance.should == 673.56
+          fetched_accounts[0].name.should == 'Cuenta recibos'
+        end
       end
+      context "with more than one account" do
+        before do
+          # Mocking around
+          stub_request(:any, /.*/).to_return(:body => fixture(:la_caixa, :account_list), :headers => { 'Content-Type' => 'text/html' })
 
-      it "fetches the accounts all the accounts" do
-        # Expectations
-        subject.should have(2)._accounts
-      end
+          agent = Mechanize.new
+          landing_page = agent.get('http://www.bank.com/accounts')
 
-      it "fetches the name and balance for each account" do
-        fetched_accounts = subject._accounts
+          agent.stub(:click).and_return(landing_page)
+          subject.stub(:landing_page).and_return(landing_page)
 
-        fetched_accounts[0].name.should == 'Cuenta principal'
-        fetched_accounts[0].balance.should == 2140.78
+          subject.stub(:agent).and_return(agent)
+        end
 
-        fetched_accounts[1].name.should == 'Cuenta secundaria'
-        fetched_accounts[1].balance.should == 0.00
+        it "fetches the accounts all the accounts" do
+          # Expectations
+          subject.should have(2)._accounts
+        end
+
+        it "fetches the name and balance for each account" do
+          fetched_accounts = subject._accounts
+
+          fetched_accounts[0].name.should == 'Cuenta principal'
+          fetched_accounts[0].balance.should == 2140.78
+
+          fetched_accounts[1].name.should == 'Cuenta secundaria'
+          fetched_accounts[1].balance.should == 0.00
+        end
       end
     end
 

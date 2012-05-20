@@ -57,7 +57,7 @@ module Bankr
         it 'writes them in a date,amount,statement format' do
           subject.write
           @stream.first.should eq(
-            ["2011-11-11", -20.51, "Foo"]
+            ["11/11/2011", -20.51, "Foo"]
           )
         end
       end
