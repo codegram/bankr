@@ -8,19 +8,18 @@ Gem::Specification.new do |s|
   s.authors = ["Oriol Gual", "Josep M. Bach", "Josep Jaume Rey"]
   s.email = %q{info@codegram.com}
   s.homepage = %q{http://github.com/codegram/bankr}
-  s.summary = %q{A gem to retrieve your bank account information.}
-  s.description = %q{A gem to retrieve your bank account information.}
+  s.summary = %q{A gem to retrieve your bank account movements.}
+  s.description = %q{A gem to retrieve your bank account movements.}
   s.rubyforge_project = 'bankr'
 
-  s.add_runtime_dependency 'celerity'
-  s.add_runtime_dependency 'nokogiri'
-  s.add_runtime_dependency 'mechanize'
-  s.add_runtime_dependency 'i18n'
-  s.add_runtime_dependency 'activesupport', '~> 3.0.7'
-  s.add_runtime_dependency 'tzinfo'
+  s.add_runtime_dependency 'poltergeist', '~> 1.7.0'
+  s.add_runtime_dependency 'capybara', '~> 2.4.4'
+  s.add_runtime_dependency 'nokogiri', '~> 1.6.6'
+  s.add_runtime_dependency 'activesupport', '~> 4'
+  s.add_development_dependency "launchy"
   s.add_development_dependency "rspec", "~> 2.5.0"
-  s.add_development_dependency "webmock"
-  s.add_development_dependency "timecop"
+  s.add_development_dependency "webmock", '~> 1.21.0'
+  s.add_development_dependency "timecop", '~> 0.7.3'
   s.add_development_dependency "rake"
   s.add_development_dependency "pry"
 

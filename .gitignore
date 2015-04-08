@@ -26,3 +26,7 @@ spec/support/valid_data.yml
 *.csv
 codegram.rb
 codegram_*.rb
+testing.rb
+movements.json
+movements.db
+sync.rb
