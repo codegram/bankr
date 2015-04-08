@@ -45,7 +45,8 @@ module Bankr
           page = agent.click page.link_with(:text => 'Castellano')
         end
 
-        page = agent.click page.link_with(:text => 'Línea Abierta')
+        page = agent.click page.link_with(:text => 'Operativa para empresas')
+        page = agent.click page.link_with(:text => 'LÃ­nea Abierta Empresa')
 
         login_form = page.forms[1]
 
@@ -53,7 +54,7 @@ module Bankr
         login_form.B = @password
         page = agent.submit(login_form)
 
-        if page.body =~ /Cuenta principal/
+        if page.body =~ /Desconectar/
           @logged_in = true
           @landing_page = page
         else
@@ -129,7 +130,7 @@ module Bankr
       private
       def fetch_movements(page, account)
         movements = []
-        page.search("div:nth-of-type(3)").search('table:last').search('tr').each_slice(2) do |row|
+        page.search("table")[3].search('tr').each_slice(2) do |row|
           # Skip pagination link
           next if row.first.search('td').length != 2
 
