@@ -118,7 +118,7 @@ module Bankr
         page = agent.submit(page.form)
 
         begin
-          pagination = page.link_with(:text => '>> Más movimientos')
+          pagination = page.link_with(:text => '>> MÃ¡s movimientos')
           movements += fetch_movements(page, account)
 
           # Navigate through pagination
