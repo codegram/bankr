@@ -1,36 +1,43 @@
 require 'bundler'
 Bundler.setup
+require 'pry'
 require 'bankr'
-
-VALID_DATA = YAML.load( File.open('spec/support/valid_data.yml') )
-
-a = Bankr::Scrapers::LaCaixa.new(:login => VALID_DATA["login"], :password => VALID_DATA["password"])
+require 'pp'
+require 'yaml'
 
 puts "LaCaixa Scraper Live Test"
-puts "Logging in...."
-a.log_in
-puts "...ok"
+VALID_DATA = YAML.load( File.open('spec/support/valid_data.yml') )
+scraper = Bankr::Scrapers::LaCaixa.new(:login => VALID_DATA["login"], :password => VALID_DATA["password"])
 
 puts "Fetching accounts...."
-accounts = a.accounts
-puts "...ok. #{accounts.size} accounts found."
+accounts = scraper.accounts
 
-puts "Fetching first account..."
-first_account = accounts[0]
-puts "...ok" unless first_account.nil?
+if accounts.any?
+  puts "#{accounts.size} accounts found!"
 
-puts "Fetching movements for the current month..."
-movements = a._movements_for(first_account)
-puts movements.inspect
-puts "...ok. Fetched #{movements.size} movements." unless movements.empty? or movements.nil?
+  accounts.each do |account|
+    puts [account.name, account.iban, account.balance.to_f].join(' - ')
+  end
 
-puts "Just for the record, your last movement looks like this:"
-pp movements.last
+  account = accounts[1]
+  puts "Fetching transactions for the current month..."
+  transactions = account.transactions_until(Time.now.to_date)
 
-puts "All movements statements:"
-pp movements.map(&:statement)
+  puts "Fetched #{transactions.size} transactions."
 
-csv = Bankr::Outputs::CSV.new(movements)
-p "Exporting movements to #{csv.filename}..."
-csv.write
-system("cat #{csv.filename}")
+  binding.pry
+else
+  puts "No accounts found"
+end
+
+#
+# puts "Just for the record, your last transaction looks like this:"
+# pp transactions.last
+#
+# puts "All transactions statements:"
+# pp transactions.map(&:statement)
+#
+# csv = Bankr::Outputs::CSV.new(transactions)
+# p "Exporting transactions to #{csv.filename}..."
+# csv.write
+# system("cat #{csv.filename}")

@@ -7,17 +7,12 @@ require 'bankr/scrapers/la_caixa'
 require 'bankr/outputs/csv'
 
 module Bankr
-
-  class Bankr
-
-    def initialize(options)
-      @scraper = eval("Scrapers::#{options.delete(:bank)}").new(options)
+  class Client
+    def initialize(bank, scraper_options)
+      @scraper = "Scraper::#{bank.classify}".constanntize.new(scraper_options)
     end
 
-    def logged_in?
-      @scraper.logged_in?
+    def transaction_until(date = Time.now.to_date)
     end
-
   end
-
 end
