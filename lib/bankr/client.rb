@@ -4,6 +4,7 @@ require 'active_support'
 require 'active_support/time'
 
 require 'bankr/scrapers/la_caixa'
+require 'bankr/scrapers/la_caixa_desktop'
 require 'bankr/outputs/csv'
 
 module Bankr

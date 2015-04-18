@@ -12,11 +12,13 @@ Gem::Specification.new do |s|
   s.description = %q{A gem to retrieve your bank account information.}
   s.rubyforge_project = 'bankr'
 
+  s.add_runtime_dependency 'selenium-webdriver'
   s.add_runtime_dependency 'mechanize'
   s.add_runtime_dependency 'nokogiri'
   s.add_runtime_dependency 'i18n'
   s.add_runtime_dependency 'activesupport', '~> 3.0.7'
   s.add_runtime_dependency 'tzinfo'
+  s.add_development_dependency "launchy"
   s.add_development_dependency "rspec", "~> 2.5.0"
   s.add_development_dependency "webmock"
   s.add_development_dependency "timecop"
