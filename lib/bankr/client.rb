@@ -1,19 +1,11 @@
-require 'nokogiri'
-require 'mechanize'
-require 'active_support'
-require 'active_support/time'
-
-require 'bankr/scrapers/la_caixa'
-require 'bankr/scrapers/la_caixa_desktop'
-require 'bankr/outputs/csv'
-
 module Bankr
   class Client
     def initialize(bank, scraper_options)
-      @scraper = "Scraper::#{bank.classify}".constanntize.new(scraper_options)
+      @scraper = "Bankr::Scrapers::#{bank.classify}".constantize.new(scraper_options)
     end
 
-    def transaction_until(date = Time.now.to_date)
+    def movements_until(iban, date)
+      @scraper.movements_until(iban, date)
     end
   end
 end

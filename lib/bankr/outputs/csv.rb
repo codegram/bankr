@@ -23,7 +23,7 @@ module Bankr
         date_format = "%Y-%m"
         first_date = @movements.first.date.strftime(date_format)
         last_date  = @movements.last.date.strftime(date_format)
-        number     = @movements.first.account.number
+        number     = @movements.first.iban
 
         "#{number}_#{last_date}_#{first_date}.csv"
       end
