@@ -47,7 +47,9 @@ module Bankr
           puts "Starting to parse #{movements.length} movements"
 
           movements.map do |row|
-            Movement.new(parse_movement(row)).save
+            movement = Movement.new(parse_movement(row))
+            movement.save
+            movement
           end
         end
       end
@@ -58,6 +60,10 @@ module Bankr
         log_in
         accounts_index
         inside_main_iframe do
+          session.all('a')
+          unless session.has_link?(iban)
+            raise "Couldn't find account #{iban}"
+          end
           session.click_link iban
           unless session.has_content?('Saldo actual')
             raise "Couldn't find account #{iban}"
@@ -71,7 +77,7 @@ module Bankr
         session.fill_in('password', with: @password)
         session.click_button 'Entrar'
 
-        if !session.has_css?('#Cabecera') || session.has_content?('IDENTIFICACIO INCORRECTA')
+        if !session.has_css?('#Cabecera') || session.has_content?('IDENTIFICACIO INCORRECTA') || session.has_content?("Accés a Línia Oberta")
           raise "Couldn't login"
         end
       end
@@ -103,23 +109,24 @@ module Bankr
         basic_detail = Nokogiri::HTML(session.driver.evaluate_script("document.getElementById('#{row['id']}').innerHTML"))
         balance = basic_detail.search('td.rtxt')[2].text
 
+        attributes = {
+          "Concepte" => basic_detail.search('th span a').text,
+          "Data" => basic_detail.search('td.ltxt').first.text,
+          "Import" => basic_detail.search('td.rtxt')[1].text,
+          'balance' => balance,
+        }
+
         if detail.has_css?('.detalle_info')
           table = detail.find('.detalle_info .table_resumen')
-          html = Nokogiri::HTML(session.driver.evaluate_script("document.getElementById('#{table['id']}').innerHTML"))
 
-          html.search('tr').select do |attribute_row|
-            attribute_row.search('td.rtxt').any?
-          end.inject({'balance' => balance}) do |attributes, attribute_row|
-            attributes.update(attribute_row.search('td.rtxt').text => attribute_row.search('td.ltxt').text)
+          table.all('tr').select do |attribute_row|
+            attribute_row.all('td.rtxt').any?
+          end.each do |attribute_row|
+            attributes.update(attribute_row.first('td.rtxt').text => attribute_row.first('td.ltxt').text)
           end
-        else
-          return {
-            "Concepte" => basic_detail.search('th span a').text,
-            "Data" => basic_detail.search('td.ltxt').first.text,
-            "Import" => basic_detail.search('td.rtxt')[1].text,
-            'balance' => balance,
-          }
         end
+
+        attributes
       rescue Capybara::ElementNotFound
         nil
       end

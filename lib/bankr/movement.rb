@@ -30,6 +30,8 @@ module Bankr
 
     def value_date
       @value_date ||= Date.parse(@payload["Data valor"].to_s)
+    rescue ArgumentError
+      nil
     end
 
     def remitter
@@ -115,11 +117,15 @@ module Bankr
         remitter: remitter,
         recipient: recipient,
         recipient_account: recipient_account,
-        amount: amount,
-        balance: balance,
-        bank_branch: brank_branch,
+        amount: amount.to_f,
+        balance: balance.to_f,
+        bank_branch: bank_branch,
         iban: iban
-      }
+      }.inject({}) do |hash, (k,v)|
+        v = nil if v.to_s.empty?
+        hash[k] = v
+        hash
+      end
     end
 
     private
@@ -134,7 +140,7 @@ module Bankr
     end
 
     def normalize_amount(value)
-      BigDecimal.new(value.gsub('.','').gsub(',','.').each_char.select{|c| c.present?}.join)
+      BigDecimal.new(value.to_s.gsub('.','').gsub(',','.').each_char.select{|c| c.present?}.join)
     end
   end
 end
