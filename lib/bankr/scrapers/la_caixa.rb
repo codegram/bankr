@@ -31,9 +31,9 @@ module Bankr
           session.find('#mes1').select(start_date.month.to_s.rjust(2, '0'))
           session.find('#any1').select(start_date.year)
 
-          session.find('#dia2').select(end_date.today.day.to_s.rjust(2, '0'))
-          session.find('#mes2').select(end_date.today.month.to_s.rjust(2, '0'))
-          session.find('#any2').select(end_date.today.year)
+          session.find('#dia2').select(end_date.day.to_s.rjust(2, '0'))
+          session.find('#mes2').select(end_date.month.to_s.rjust(2, '0'))
+          session.find('#any2').select(end_date.year)
 
           session.click_link('Cercar')
           puts "Loading movements from #{start_date} to #{end_date}"
