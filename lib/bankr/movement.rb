@@ -17,7 +17,7 @@ module Bankr
         merge_fields("Concepte específic", "Concepte informat per l'ordenant", "Referència Ordenant de la transferència", "Referència pel beneficiari"),
         " ",
         merge_fields("Primer concepte del rebut", "Ampliacio concepte transferencia"),
-      ].join.strip
+      ].join.strip.gsub('  ', ' ')
     end
 
     def credit_card_number
@@ -41,7 +41,7 @@ module Bankr
         merge_fields("Ampliacio remitent de la transferencia", "Ampliacio remitent transferencia"),
         " ",
         merge_fields("Adreca remitent", "Poblacio remitent"),
-      ].join.strip
+      ].join.strip.gsub('  ', ' ')
     end
 
     def recipient
@@ -49,7 +49,7 @@ module Bankr
         merge_fields("Beneficiari", "Nom del beneficiari", "Titular del rebut", "Nom Deutor"),
         " ",
         @payload["Domicili beneficiari"],
-      ].join.strip
+      ].join.strip.gsub('  ', ' ')
     end
 
     def recipient_account
