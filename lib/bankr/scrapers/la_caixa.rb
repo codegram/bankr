@@ -18,21 +18,25 @@ module Bankr
       def movements_until(iban, date = Date.today)
         raise "Date has to be in the past" if date > Date.today
 
+        movements_from_to(iban, date, Date.today)
+      end
+
+      def movements_from_to(iban, start_date, end_date)
         navigate_to_account(iban)
         inside_main_iframe do
           session.click_link 'Cercar moviments'
 
           raise "Couldn't load search form" unless session.has_content?('Cerca avançada')
-          session.find('#dia1').select(date.day.to_s.rjust(2, '0'))
-          session.find('#mes1').select(date.month.to_s.rjust(2, '0'))
-          session.find('#any1').select(date.year)
+          session.find('#dia1').select(start_date.day.to_s.rjust(2, '0'))
+          session.find('#mes1').select(start_date.month.to_s.rjust(2, '0'))
+          session.find('#any1').select(start_date.year)
 
-          session.find('#dia2').select(Date.today.day.to_s.rjust(2, '0'))
-          session.find('#mes2').select(Date.today.month.to_s.rjust(2, '0'))
-          session.find('#any2').select(Date.today.year)
+          session.find('#dia2').select(end_date.today.day.to_s.rjust(2, '0'))
+          session.find('#mes2').select(end_date.today.month.to_s.rjust(2, '0'))
+          session.find('#any2').select(end_date.today.year)
 
           session.click_link('Cercar')
-          puts "Loading movements from #{date} to #{Date.today}"
+          puts "Loading movements from #{start_date} to #{end_date}"
 
           begin
             if session.has_css?('a.next_acumulativo_on')
