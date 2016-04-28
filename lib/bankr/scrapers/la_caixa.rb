@@ -8,9 +8,10 @@ module Bankr
         @password = options[:password]
 
         @url = "https://empresa.lacaixa.es/home/empreses_ca.html"
-        Capybara.default_wait_time = 4
+        Capybara.default_wait_time = 10
+        options = { js_errors: false }
         Capybara.register_driver :poltergeist do |app|
-          Capybara::Poltergeist::Driver.new(app, js_errors: false)
+          Capybara::Poltergeist::Driver.new(app, options)
         end
         @session = Capybara::Session.new(:poltergeist)
       end
@@ -57,7 +58,10 @@ module Bankr
       rescue Capybara::Poltergeist::BrowserError => exception
         puts "Oooops something went wrong and Poltergeist crashed"
         puts exception.message
+        puts exception.backtrace
         session.save_screenshot("/tmp/#{Time.now}.png", full: true)
+
+        []
       end
 
       private
@@ -95,6 +99,14 @@ module Bankr
           session.within_frame('Niveles') do
             session.find('body')
             session.click_link 'Tresoreria'
+          end
+        end
+        session.all('frameset')
+        session.within_frame('Inferior') do
+          session.all('frameset')
+          session.within_frame('Menu') do
+            session.find('body')
+            session.click_link 'Posició'
           end
         end
       end
