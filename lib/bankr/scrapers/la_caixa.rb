@@ -57,7 +57,6 @@ module Bankr
       rescue Capybara::Poltergeist::BrowserError => exception
         puts "Oooops something went wrong and Poltergeist crashed"
         puts exception.backtrace
-        byebug
         session.save_screenshot
       end
 
