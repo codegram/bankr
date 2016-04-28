@@ -97,8 +97,9 @@ module Bankr
       end
 
       def inside_main_iframe(&block)
+        session.all('frameset')
         session.within_frame('Inferior') do
-          session.find('body')
+          session.all('frameset')
           session.within_frame('Cos') do
             session.find('body')
             yield block
