@@ -89,8 +89,11 @@ module Bankr
       end
 
       def accounts_index
+        session.all('frameset')
         session.within_frame('Inferior') do
+          session.all('frameset')
           session.within_frame('Niveles') do
+            session.find('body')
             session.click_link 'Tresoreria'
           end
         end
