@@ -51,11 +51,14 @@ module Bankr
           puts "Starting to parse #{movements.length} movements"
 
           movements.map do |row|
-            movement = Movement.new(parse_movement(row))
-            movement.save
-            movement
+            Movement.new(parse_movement(row))
           end
         end
+      rescue Capybara::Poltergeist::BrowserError => exception
+        puts "Oooops something went wrong and Poltergeist crashed"
+        puts exception.backtrace
+        byebug
+        session.save_screenshot
       end
 
       private

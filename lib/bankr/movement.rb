@@ -1,5 +1,3 @@
-require 'gdbm'
-
 module Bankr
   class Movement
     attr_reader :payload
@@ -99,12 +97,6 @@ module Bankr
   bank_branch: #{bank_branch},
   iban: #{iban}
 >"
-    end
-
-    def save
-      db = GDBM.new('movements.db')
-      db[signature] = Marshal.dump(payload)
-      db.close
     end
 
     def to_hash
