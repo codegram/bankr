@@ -152,7 +152,9 @@ module Bankr
 
         attributes
       rescue Capybara::ElementNotFound
-        nil
+        puts "Oops something went wrong when expanding a detail view"
+        puts row.inspect
+        return attributes if defined?(attributes)
       end
     end
   end

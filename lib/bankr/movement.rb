@@ -3,7 +3,7 @@ module Bankr
     attr_reader :payload
 
     def initialize(payload)
-      @payload = payload
+      @payload = payload || {}
     end
 
     def statement
