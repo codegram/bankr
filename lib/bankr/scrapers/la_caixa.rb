@@ -71,12 +71,15 @@ module Bankr
         accounts_index
         inside_main_iframe do
           session.all('a')
+
           unless session.has_link?(iban)
             raise "Couldn't find account #{iban}"
           end
+
           session.click_link iban
-          unless session.has_content?('Saldo actual')
-            raise "Couldn't find account #{iban}"
+
+          if !session.has_content?('Saldo actual') && !session.has_content?('Número de compte')
+            raise "Couldn't load account #{iban}"
           end
         end
       end
