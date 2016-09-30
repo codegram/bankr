@@ -132,6 +132,10 @@ module Bankr
     end
 
     def normalize_amount(value)
+      if value.end_with?("-")
+        value = "-#{value.delete('-')}"
+      end
+
       BigDecimal.new(value.to_s.gsub('.','').gsub(',','.').each_char.select{|c| c.present?}.join)
     end
   end
