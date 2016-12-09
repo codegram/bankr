@@ -12,9 +12,9 @@ Gem::Specification.new do |s|
   s.description = %q{A gem to retrieve your bank account movements.}
   s.rubyforge_project = 'bankr'
 
-  s.add_runtime_dependency 'poltergeist', '~> 1.7.0'
-  s.add_runtime_dependency 'capybara', '~> 2.4.4'
-  s.add_runtime_dependency 'nokogiri', '~> 1.6.6'
+  s.add_runtime_dependency 'poltergeist', '~> 1.12.0'
+  s.add_runtime_dependency 'capybara', '~> 2.11.0'
+  s.add_runtime_dependency 'nokogiri', '~> 1.6.8'
   s.add_runtime_dependency 'activesupport', '~> 4'
   s.add_development_dependency "launchy"
   s.add_development_dependency "rspec", "~> 2.5.0"

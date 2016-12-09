@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Bankr
   module Scrapers
     class LaCaixa
@@ -8,9 +9,9 @@ module Bankr
         @password = options[:password]
 
         @url = "https://empresa.lacaixa.es/home/empreses_ca.html"
-        Capybara.default_wait_time = 10
+        Capybara.default_max_wait_time = 10
         options = {
-          js_errors: false,
+          js_errors: false
         }
         Capybara.register_driver :poltergeist do |app|
           driver = Capybara::Poltergeist::Driver.new(app, options)
@@ -144,7 +145,7 @@ module Bankr
           session.all('frameset')
           session.within_frame('Menu') do
             session.find('body')
-            session.click_link 'Posició'
+            # session.click_link 'Posició'
           end
         end
       end
