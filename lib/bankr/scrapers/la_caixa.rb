@@ -119,9 +119,15 @@ module Bankr
       def log_in
         puts "Opening CaixaBank website..."
         session.visit(@url)
-        session.fill_in('usuari', with: @login)
-        session.fill_in('password', with: @password)
-        session.click_button 'Entrar'
+        session.find("#cookie-form .button a").click
+
+        if session.has_no_content?("La teva privacitat")
+          session.fill_in('usuari', with: @login)
+          session.fill_in('password', with: @password)
+          session.click_button 'Entrar'
+        else
+          raise "Couldn't dismiss cookie form"
+        end
 
         if !session.has_css?('#Cabecera') || session.has_content?('IDENTIFICACIO INCORRECTA') || session.has_content?("Accés a Línia Oberta")
           raise "Couldn't login"
