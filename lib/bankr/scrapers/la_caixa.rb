@@ -119,7 +119,8 @@ module Bankr
       def log_in
         puts "Opening CaixaBank website..."
         session.visit(@url)
-        session.find("#cookie-form .button a").click
+        session.execute_script('document.getElementById("cookie2").remove();')
+        #session.find("#cookie-form .button a").click
 
         if session.has_no_content?("La teva privacitat")
           session.fill_in('usuari', with: @login)
