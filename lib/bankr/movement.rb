@@ -136,7 +136,7 @@ module Bankr
         value = "-#{value.delete('-')}"
       end
 
-      BigDecimal.new(value.to_s.gsub('.','').gsub(',','.').each_char.select{|c| c.present?}.join)
+      BigDecimal.new(value.to_s.gsub('.','').gsub(',','.').gsub('euros', '').each_char.select{|c| c.present?}.join)
     end
   end
 end
